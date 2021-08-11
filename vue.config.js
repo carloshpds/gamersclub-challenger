@@ -8,6 +8,13 @@ module.exports = {
   configureWebpack: {
     devtool: 'cheap-module-source-map',
     plugins: [
+      new ChromeExtensionReloader({
+        entries: {
+          contentScript: ['lobbyContentScripts'],
+          background: 'background.js',
+          extensionPage: ['popup', 'options', /* and so on ... */],
+        }
+      }),
       new CopyWebpackPlugin({
         patterns: [
           {
@@ -41,7 +48,7 @@ module.exports = {
       template: 'src/apps/popup/popup.html'
     },
 
-    contentScripts: {
+    lobbyContentScripts: {
       entry: 'src/apps/content/index.js',
       chunks: [],
     },
@@ -49,8 +56,5 @@ module.exports = {
   chainWebpack: (config) => {
     config.plugin('writeFile')
       .use(WriteFilePlugin)
-
-    // config.plugin('extensionLoader')
-    //   .use(ChromeExtensionReloader)
   },
 };
